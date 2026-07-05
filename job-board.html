@@ -10,8 +10,8 @@
   :root{
     --ink:#2B1832;
     --paper:#FBF6FA;
-    --teal:#D62E7D;
-    --gold:#7B3FA0;
+    --teal:#8E3A8C;
+    --cta-teal:#4FA79E;
     --gray:#8A7F91;
     --line:#EADCE8;
     --card:#FFFFFF;
@@ -50,7 +50,7 @@
   .job-main{ display:flex; flex-direction:column; gap:10px; }
   .job-title{ font-family:'Fraunces',serif; font-weight:500; font-size:21px; line-height:1.3; }
   .job-summary{ font-size:14px; color:var(--gray); line-height:1.6; }
-  .job-meta{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:2px; }
+  .job-meta{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:2px; }
   .job-code{
     font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gray);
     letter-spacing:.05em;
@@ -60,8 +60,8 @@
     text-transform:uppercase; padding:4px 10px; border-radius:100px;
     border:1px solid var(--line); color:var(--gray);
   }
-  .tag.type-full{ border-color:#3E7C6B55; color:var(--teal); }
-  .tag.type-part{ border-color:#C9A45C66; color:#a5793a; }
+  .tag.type-full{ border-color:#8E3A8C55; color:var(--teal); }
+  .tag.type-part{ border-color:#4FA79E66; color:#2E7369; }
   .comp{ font-size:14px; color:var(--ink); font-weight:500; }
   .view-link{
     font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.05em;
@@ -70,14 +70,14 @@
   }
   .job-card:hover .view-link{ gap:10px; }
 
-  .empty-state{
+  .empty-state, .status-msg{
     text-align:center; padding:60px 20px; color:var(--gray);
     font-family:'Fraunces',serif; font-size:18px;
   }
 
   /* ---------- detail overlay ---------- */
   .overlay{
-    position:fixed; inset:0; background:rgba(27,36,48,0.4);
+    position:fixed; inset:0; background:rgba(27,36,48,0.45);
     display:none; align-items:flex-start; justify-content:center;
     padding:40px 20px; overflow-y:auto; z-index:50;
     opacity:0; transition:opacity .25s ease;
@@ -85,55 +85,86 @@
   .overlay.open{ display:flex; opacity:1; }
 
   .detail-panel{
-    background:var(--paper); max-width:640px; width:100%;
-    border-radius:16px; padding:44px clamp(24px,5vw,56px) 48px;
-    position:relative;
+    background:var(--paper); max-width:720px; width:100%;
+    border-radius:16px; padding:0 0 48px;
+    position:relative; overflow:hidden;
     transform:translateY(16px); transition:transform .25s cubic-bezier(.2,.8,.2,1);
   }
   .overlay.open .detail-panel{ transform:translateY(0); }
 
+  .accepting-banner{
+    background:var(--cta-teal); color:#fff; text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em;
+    text-transform:uppercase; padding:10px; position:relative;
+  }
+
+  .detail-body{ padding:36px clamp(24px,5vw,56px) 0; }
+
   .close-btn{
-    position:absolute; top:22px; right:24px;
-    background:none; border:none; font-size:22px; color:var(--gray);
+    position:absolute; top:14px; right:20px;
+    background:none; border:none; font-size:22px; color:#fff;
     cursor:pointer; line-height:1; padding:6px;
   }
-  .close-btn:hover{ color:var(--ink); }
+  .close-btn:hover{ opacity:.8; }
 
-  .detail-code{
-    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gray);
-    letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px;
+  .back-link{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gray);
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+    margin-bottom:20px; cursor:pointer; background:none; border:none; padding:0;
   }
+  .back-link:hover{ color:var(--teal); }
+
+  .detail-top-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:22px; flex-wrap:wrap; }
   .detail-title{
-    font-family:'Fraunces',serif; font-weight:500; font-size:clamp(24px,4vw,32px);
-    margin:0 0 16px; line-height:1.2;
-  }
-  .detail-tags{ display:flex; gap:10px; margin-bottom:26px; flex-wrap:wrap; }
-  .detail-comp{
-    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--gray);
-    padding:4px 10px; border:1px solid var(--line); border-radius:100px;
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(24px,4vw,32px);
+    margin:0; line-height:1.2;
   }
 
-  .detail-section{ margin-bottom:26px; }
+  .apply-btn{
+    display:inline-block; flex-shrink:0;
+    background:var(--teal); color:#fff; text-decoration:none;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
+    padding:12px 26px; border-radius:6px;
+    transition:background .15s ease, transform .12s ease;
+  }
+  .apply-btn:hover{ background:#742C72; }
+  .apply-btn:active{ transform:scale(.97); }
+
+  .meta-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(130px,1fr));
+    gap:18px; background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin-bottom:30px;
+  }
+  .meta-item h4{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--gray); margin:0 0 6px; font-weight:500;
+  }
+  .meta-item p{ font-size:14px; font-weight:600; margin:0; color:var(--ink); }
+
+  .detail-section{ margin-bottom:28px; }
   .detail-section h3{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase;
-    letter-spacing:.08em; color:var(--teal); margin:0 0 10px;
+    font-family:'Fraunces',serif; font-weight:600; font-size:17px;
+    color:var(--ink); margin:0 0 12px;
   }
   .detail-section p{ font-size:15px; line-height:1.7; color:var(--ink); margin:0; }
   .detail-section ul{ margin:0; padding-left:20px; }
   .detail-section li{ font-size:15px; line-height:1.8; color:var(--ink); }
+  .detail-section ol{ margin:0; padding-left:20px; }
+  .detail-section ol li{ font-size:15px; line-height:1.9; color:var(--ink); }
 
-  .apply-btn{
+  .apply-btn-bottom{
     display:inline-block; margin-top:8px;
-    background:var(--ink); color:var(--paper); text-decoration:none;
+    background:var(--teal); color:#fff; text-decoration:none;
     font-family:'Inter',sans-serif; font-weight:600; font-size:15px;
     padding:15px 32px; border-radius:6px;
     transition:background .15s ease, transform .12s ease;
   }
-  .apply-btn:hover{ background:var(--teal); }
-  .apply-btn:active{ transform:scale(.97); }
+  .apply-btn-bottom:hover{ background:#742C72; }
+  .apply-btn-bottom:active{ transform:scale(.97); }
 
   @media (max-width:560px){
     .job-list{ grid-template-columns:1fr; }
+    .detail-top-row{ flex-direction:column; }
   }
 </style>
 </head>
@@ -149,84 +180,65 @@
   <p class="subhead">Find a meaningful role to match your skills, aspirations, and values. Click any role below to see the full description.</p>
 
   <div class="job-list" id="jobList"></div>
-  <div class="empty-state" id="emptyState" style="display:none;">No open roles right now — check back soon.</div>
+  <div class="status-msg" id="statusMsg" style="display:none;"></div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="detail-panel">
-    <button class="close-btn" id="closeBtn">&times;</button>
-    <div id="detailContent"></div>
+    <div class="accepting-banner">
+      Accepting Applications Now
+      <button class="close-btn" id="closeBtn">&times;</button>
+    </div>
+    <div class="detail-body" id="detailContent"></div>
   </div>
 </div>
 
 <script>
 /* ============================================================
-   CONFIG — this is the only part you'll ever need to edit.
-   Copy an existing job block (the { ... } part) to add a new
-   role, or delete a block to take a role down. Keep the commas
-   between entries.
+   CONFIG
    ============================================================ */
 
-// Where your application form lives. Keep this as-is unless you
-// move or rename candidate-intake.html.
+// Where your application form lives.
 const APPLICATION_FORM_URL = "candidate-intake.html";
 
-const JOBS = [
-  {
-    code: "RC-014",
-    title: "Backend Engineer",
-    type: "full-time",              // "full-time" or "part-time"
-    compensation: "$2,000–$3,000/month",
-    summary: "Own core API and infrastructure work for a fast-growing SaaS product.",
-    description: "You'll work directly with our client's engineering team, building and maintaining backend services that power a B2B SaaS platform used by thousands of businesses. This is a fully remote role on a small, senior team.",
-    responsibilities: [
-      "Design and build scalable backend services and APIs",
-      "Collaborate directly with the client's product and engineering leads",
-      "Own code quality, testing, and deployment for your area",
-      "Participate in architecture decisions as the product grows"
-    ],
-    requirements: [
-      "3+ years professional backend development experience",
-      "Strong experience with Node.js, Python, or Go",
-      "Comfortable working async across time zones",
-      "Clear written and spoken English"
-    ]
-  },
-  {
-    code: "RC-015",
-    title: "Product Designer",
-    type: "part-time",
-    compensation: "$1,200–$1,800/month",
-    summary: "Shape the product experience for an early-stage fintech startup.",
-    description: "A part-time, flexible-hours role designing user flows, interfaces, and design systems for a small but fast-moving fintech team. Great fit if you want meaningful ownership without full-time hours.",
-    responsibilities: [
-      "Design end-to-end user flows for new features",
-      "Maintain and evolve the product's design system",
-      "Run lightweight user research and usability checks",
-      "Work closely with a small, senior product team"
-    ],
-    requirements: [
-      "2+ years product design experience, ideally B2C or fintech",
-      "Strong portfolio showing end-to-end product thinking",
-      "Proficiency in Figma",
-      "Available roughly 20 hours/week, overlapping US business hours"
-    ]
-  }
-];
+// Same Apps Script Web App URL used by your application form —
+// this fetches job postings from the "Jobs" tab of your Google Sheet.
+const JOBS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5MsoggHuLQyt-cUpbLy5INk3LfrhVbiCT8r4aoA7b7iAD7Tsy3-kiHwEBgrMYbGf0/exec";
 
 /* ============================================================
    ENGINE — no need to touch anything below this line
    ============================================================ */
 
+let JOBS = [];
 const jobList = document.getElementById('jobList');
-const emptyState = document.getElementById('emptyState');
+const statusMsg = document.getElementById('statusMsg');
 const overlay = document.getElementById('overlay');
 const detailContent = document.getElementById('detailContent');
 const closeBtn = document.getElementById('closeBtn');
 
+function showStatus(text){
+  statusMsg.style.display = 'block';
+  statusMsg.textContent = text;
+}
+
+async function loadJobs(){
+  showStatus('Loading open roles…');
+  try{
+    const response = await fetch(JOBS_SCRIPT_URL);
+    const result = await response.json();
+    if(!result.success) throw new Error(result.error || 'Could not load jobs');
+    JOBS = result.jobs || [];
+    statusMsg.style.display = 'none';
+    renderJobList();
+  } catch(err){
+    console.error('Failed to load jobs', err);
+    showStatus("We couldn't load open roles right now — please refresh the page.");
+  }
+}
+
 function renderJobList(){
   if(JOBS.length === 0){
-    emptyState.style.display = 'block';
+    showStatus('No open roles right now — check back soon.');
     return;
   }
   jobList.innerHTML = JOBS.map((job, i) => `
@@ -236,11 +248,11 @@ function renderJobList(){
         <div class="job-title">${job.title}</div>
         <p class="job-summary">${job.summary}</p>
         <div class="job-meta">
-          <span class="tag ${job.type === 'full-time' ? 'type-full' : 'type-part'}">${job.type}</span>
-          <span class="comp">${job.compensation}</span>
+          <span class="tag ${job.type && job.type.toLowerCase().includes('part') ? 'type-part' : 'type-full'}">${job.type}</span>
+          <span class="comp">${job.salary}</span>
         </div>
       </div>
-      <div class="view-link">View role →</div>
+      <div class="view-link">View Details →</div>
     </div>
   `).join('');
 
@@ -249,30 +261,64 @@ function renderJobList(){
   });
 }
 
+function listSection(title, items){
+  if(!items || items.length === 0) return '';
+  return `
+    <div class="detail-section">
+      <h3>${title}</h3>
+      <ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>`;
+}
+
+function orderedSection(title, items){
+  if(!items || items.length === 0) return '';
+  return `
+    <div class="detail-section">
+      <h3>${title}</h3>
+      <ol>${items.map(i => `<li>${i}</li>`).join('')}</ol>
+    </div>`;
+}
+
+function textSection(title, text){
+  if(!text) return '';
+  return `
+    <div class="detail-section">
+      <h3>${title}</h3>
+      <p>${text}</p>
+    </div>`;
+}
+
 function openDetail(job){
   const applyUrl = `${APPLICATION_FORM_URL}?role=${encodeURIComponent(job.title)}`;
   detailContent.innerHTML = `
-    <div class="detail-code">${job.code} · ${job.type}</div>
-    <h2 class="detail-title">${job.title}</h2>
-    <div class="detail-tags">
-      <span class="detail-comp">${job.compensation}</span>
+    <button class="back-link" id="backLink">← Back</button>
+    <div class="detail-top-row">
+      <h2 class="detail-title">${job.title}</h2>
+      <a class="apply-btn" href="${applyUrl}">Apply Now</a>
     </div>
-    <div class="detail-section">
-      <h3>About the role</h3>
-      <p>${job.description}</p>
+
+    <div class="meta-grid">
+      <div class="meta-item"><h4>Job Category</h4><p>${job.category || '—'}</p></div>
+      <div class="meta-item"><h4>Job Type</h4><p>${job.type || '—'}</p></div>
+      <div class="meta-item"><h4>Location Type</h4><p>${job.locationType || '—'}</p></div>
+      <div class="meta-item"><h4>Office Location</h4><p>${job.officeLocation || '—'}</p></div>
+      <div class="meta-item"><h4>Salary</h4><p>${job.salary || '—'}</p></div>
+      ${job.workWeek ? `<div class="meta-item"><h4>Work Week</h4><p>${job.workWeek}</p></div>` : ''}
     </div>
-    <div class="detail-section">
-      <h3>What you'll do</h3>
-      <ul>${job.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul>
-    </div>
-    <div class="detail-section">
-      <h3>What we're looking for</h3>
-      <ul>${job.requirements.map(r => `<li>${r}</li>`).join('')}</ul>
-    </div>
-    <a class="apply-btn" href="${applyUrl}">Apply for this role</a>
+
+    ${textSection('Company Description', job.companyDescription)}
+    ${textSection('About the Role', job.aboutRole)}
+    ${listSection('Key Responsibilities', job.responsibilities)}
+    ${listSection('Skills &amp; Qualifications', job.skills)}
+    ${listSection('Employment Structure', job.benefits)}
+    ${orderedSection('Hiring Process', job.hiringProcess)}
+
+    <a class="apply-btn-bottom" href="${applyUrl}">Apply Now</a>
   `;
+  document.getElementById('backLink').addEventListener('click', closeDetail);
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+  overlay.scrollTop = 0;
 }
 
 function closeDetail(){
@@ -284,7 +330,7 @@ closeBtn.addEventListener('click', closeDetail);
 overlay.addEventListener('click', e => { if(e.target === overlay) closeDetail(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDetail(); });
 
-renderJobList();
+loadJobs();
 </script>
 </body>
 </html>
