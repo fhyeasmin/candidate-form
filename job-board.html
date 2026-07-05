@@ -331,7 +331,7 @@ function openDetail(job){
       <div class="meta-item"><h4>Job Type</h4><p>${job.type || '—'}</p></div>
       <div class="meta-item"><h4>Location Type</h4><p>${job.locationType || '—'}</p></div>
       <div class="meta-item"><h4>Office Location</h4><p>${job.officeLocation || '—'}</p></div>
-      <div class="meta-item"><h4>Salary</h4><p>${job.salary || '—'}</p></div>
+      ${job.salary ? `<div class="meta-item"><h4>Salary</h4><p>${job.salary}</p></div>`
       ${job.workWeek ? `<div class="meta-item"><h4>Work Week</h4><p>${job.workWeek}</p></div>` : ''}
     </div>
 
